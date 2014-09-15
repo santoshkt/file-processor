@@ -9,6 +9,7 @@ This java maven application reads a file (name passed in as 1st argument to prog
 - Legal category values are: PERSON PLACE ANIMAL COMPUTER OTHER
 - Illegal category values should be ignored
 - Output is:
+
 CATEGORY     COUNT
 PERSON
 PLACE
@@ -16,5 +17,5 @@ ANIMAL
 COMPUTER
 OTHER
 Ordered list of input
--- Category output should be in the order shown
--- If there are no items in the file for a specified category, it should be shown with a count of 0
+- Category output should be in the order shown
+- If there are no items in the file for a specified category, it should be shown with a count of 0
