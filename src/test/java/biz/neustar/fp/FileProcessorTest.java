@@ -2,10 +2,15 @@ package biz.neustar.fp;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintStream;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,6 +20,39 @@ public class FileProcessorTest {
 	private final ByteArrayOutputStream out = new ByteArrayOutputStream();
 	private final ByteArrayOutputStream err = new ByteArrayOutputStream();
 	private static final StringBuilder sb = new StringBuilder();
+	private static final String inputFile = "tempFile" + Math.random();
+
+	@BeforeClass
+	public static void buildInputFile() {
+
+		try {
+
+			File file = new File(inputFile);
+
+			// If file doesnt exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+
+			bw.write("PERSON Bob Jones\n");
+			bw.write("PLACE Washington\n");
+			bw.write("PERSON Mary\n");
+			bw.write("COMPUTER Mac\n");
+			bw.write("PERSON Bob Jones\n");
+			bw.write("OTHER Tree\n");
+			bw.write("ANIMAL Dog\n");
+			bw.write("PLACE Texas\n");
+			bw.write("FOOD Steak\n");
+			bw.write("ANIMAL Cat\n");
+			bw.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@BeforeClass
 	public static void buildOutput() {
@@ -43,13 +81,13 @@ public class FileProcessorTest {
 
 	@Test
 	public void testFileProcessor() {
-		FileProcessor.main(new String[] { "src/test/resources/inputData.txt" });
+		FileProcessor.main(new String[] { inputFile });
 		assertEquals(sb.toString(), out.toString());
 	}
-	
+
 	@Test
 	public void testFileProcessorAgain() {
-		FileProcessor.main(new String[] { "src/test/resources/inputData.txt" });
+		FileProcessor.main(new String[] { inputFile });
 		assertEquals(sb.toString(), out.toString());
 	}
 
@@ -68,11 +106,21 @@ public class FileProcessorTest {
 				"Error: Input file does not exist or the path is incorrect.\r\n",
 				out.toString());
 	}
-
+	
 	@After
 	public void clearSystemIO() {
 		System.setOut(null);
 		System.setErr(null);
 	}
 
+	@AfterClass
+	public static void deleteInputFile() {
+
+		try {
+			File file = new File(inputFile);
+			file.delete();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
